@@ -27,23 +27,6 @@ class LoginController extends Controller
         return $this->returnToken($user, $request);
     }
 
-    private function returnToken($user, $request = null)
-    {
-        $tokenResult = $user->createToken('Personal Access Token');
-        $token = $tokenResult->token;
-        if ($request && $request->remember_me) {
-            $token->expires_at = Carbon::now()->addWeeks(1);
-        }
-        $token->save();
-        return response()->json([
-            'access_token' => $tokenResult->accessToken,
-            'token_type' => 'Bearer',
-            'expires_at' => Carbon::parse(
-                $tokenResult->token->expires_at
-            )->toDateTimeString()
-        ]);
-    }
-
     private function invalidCredentials()
     {
         return response()->json([

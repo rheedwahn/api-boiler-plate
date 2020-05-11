@@ -4,6 +4,9 @@ Route::group(['middleware' => 'apiLogger'], function() {
     Route::post('/login', 'Api\Auth\LoginController@login');
     Route::post('/register', 'Api\Auth\RegisterController@register');
     Route::get('/users/{token}/verify', 'Api\Auth\RegisterController@verify')->name('email.verify');
+    Route::post('/forgot-password', 'Api\Auth\ForgotPasswordController@forgotPassword');
+    Route::post('/reset-password', 'Api\Auth\ForgotPasswordController@resetPassword');
+    Route::get('users/{user}/auth', 'Api\Auth\ForgotPasswordController@temporaryLogin')->name('user.temporary.link');
 
     Route::get('/me', 'Api\Me\MeController@me');
     Route::group(['prefix' => 'users'], function() {
@@ -27,6 +30,8 @@ Route::group(['middleware' => 'apiLogger'], function() {
         Route::patch('/{permission}', 'Api\Permission\PermissionController@update');
         Route::delete('/{permission}', 'Api\Permission\PermissionController@delete');
     });
+
+    Route::get('/logout', 'Api\Me\MeController@logout');
 });
 
 

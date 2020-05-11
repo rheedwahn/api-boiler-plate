@@ -59,4 +59,14 @@ class MeController extends Controller
         })->orderBy('created_at', 'desc')->paginate(10);
         return UserResource::collection($users);
     }
+
+    public function logout()
+    {
+        $token = request()->user()->token();
+        $token->revoke();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Logged out successfully'
+        ], 200);
+    }
 }
