@@ -12,6 +12,21 @@ Route::group(['middleware' => 'apiLogger'], function() {
         Route::delete('/{user}', 'Api\Me\MeController@deleteUser');
         Route::get('/', 'Api\Me\MeController@lists');
     });
+
+    Route::group(['prefix' => 'roles'], function() {
+        Route::get('/', 'Api\Role\RoleController@lists');
+        Route::post('/', 'Api\Role\RoleController@store');
+        Route::patch('/{role}', 'Api\Role\RoleController@update');
+        Route::delete('/{role}', 'Api\Role\RoleController@delete');
+        Route::patch('/{role}/permissions', 'Api\Role\RoleController@assignPermissions');
+    });
+
+    Route::group(['prefix' => 'permissions'], function() {
+        Route::get('/', 'Api\Permission\PermissionController@lists');
+        Route::post('/', 'Api\Permission\PermissionController@store');
+        Route::patch('/{permission}', 'Api\Permission\PermissionController@update');
+        Route::delete('/{permission}', 'Api\Permission\PermissionController@delete');
+    });
 });
 
 
