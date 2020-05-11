@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Role;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Role\AssignPermissionRequest;
+use App\Http\Requests\Api\Role\ListRequest;
 use App\Http\Requests\Api\Role\StoreRequest;
 use App\Http\Requests\Api\Role\UpdateRequest;
 use App\Http\Resources\Api\Role\RoleResource;
@@ -18,9 +19,11 @@ class RoleController extends Controller
         $this->middleware('role:Admin');
     }
 
-    public function lists()
+    public function lists(ListRequest $request)
     {
-        $roles = Role::paginate(10);
+        $roles = Role::when($request->name, function($query) use($request) {
+            return $query->where('name', 'LIKE', '%'.$request->name.'%');
+        })->orderBy('created_at', 'desc')->paginate(10);
         return RoleResource::collection($roles);
     }
 

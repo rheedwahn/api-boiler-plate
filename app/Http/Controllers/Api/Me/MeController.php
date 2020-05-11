@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Me;
 
 use App\Enum\UserStatus;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\User\ListRequest;
 use App\Http\Requests\Api\User\UpdateRequest;
 use App\Http\Requests\Api\User\UpdateUserByAdminRequest;
 use App\Http\Resources\Api\User\UserResource;
@@ -51,9 +52,11 @@ class MeController extends Controller
         return response()->json(['status' => 'success', 'message' => 'resource deleted successfully'], 200);
     }
 
-    public function lists()
+    public function lists(ListRequest $request)
     {
-        $users = User::orderBy('created_at', 'desc')->paginate(10);
+        $users = User::when($request->name, function($query) use($request) {
+            return $query->where('name', 'LIKE', '%'.$request->name.'%');
+        })->orderBy('created_at', 'desc')->paginate(10);
         return UserResource::collection($users);
     }
 }
