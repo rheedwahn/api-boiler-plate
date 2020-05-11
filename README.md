@@ -1,6 +1,6 @@
 ## About Rapido Api Boiler Plate
 
-This is a complete api boiler plate that allows you to easily set up and get your development work going without any hassle. The boiler plate is built on Laravel, one of PHP's most popular framework. The boiler plate has the following implementation out of the box
+This is a complete api boiler plate that allows you to easily set up and get your development work going without any hassle. The boiler plate is built on Laravel, one of PHP's most popular framework. It is developed by [rheedwahn](https://rheedwahn.github.io/). The boiler plate has the following implementation out of the box
 
 - User Authentication using laravel passport for token management
 - User Registration
