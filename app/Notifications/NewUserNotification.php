@@ -11,16 +11,19 @@ use Illuminate\Notifications\Notification;
 class NewUserNotification extends Notification
 {
     use Queueable;
+
     protected $user;
+    protected $full_path;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct(User $user)
+    public function __construct(User $user, $full_path)
     {
         $this->user = $user;
+        $this->full_path = $full_path;
     }
 
     /**
@@ -46,7 +49,7 @@ class NewUserNotification extends Notification
                     ->line('Hello '.$this->user->name)
                     ->line('Thank you for registering on our platform')
                     ->line('Please verify your email')
-                    ->action('Verify Email', url(route('email.verify', ['token' => $this->user->remember_token])))
+                    ->action('Verify Email', $this->full_path)
                     ->line('Thank you for using our application!');
     }
 
