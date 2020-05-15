@@ -1,34 +1,34 @@
 <?php
 
-Route::group(['middleware' => 'apiLogger'], function() {
-    Route::post('/login', 'Api\Auth\LoginController@login');
-    Route::post('/register', 'Api\Auth\RegisterController@register');
-    Route::get('/users/{token}/verify', 'Api\Auth\RegisterController@verify')->name('email.verify');
-    Route::post('/forgot-password', 'Api\Auth\ForgotPasswordController@forgotPassword');
-    Route::post('/reset-password', 'Api\Auth\ForgotPasswordController@resetPassword');
-    Route::get('users/{user}/auth', 'Api\Auth\ForgotPasswordController@temporaryLogin')->name('user.temporary.link');
+Route::group(['middleware' => 'apiLogger', 'namespace' => 'Api\Auth'], function() {
+    Route::post('/login', 'LoginController@login');
+    Route::post('/register', 'RegisterController@register');
+    Route::get('/users/{token}/verify', 'RegisterController@verify')->name('email.verify');
+    Route::post('/forgot-password', 'ForgotPasswordController@forgotPassword');
+    Route::post('/reset-password', 'ForgotPasswordController@resetPassword');
+    Route::get('users/{user}/auth', 'ForgotPasswordController@temporaryLogin')->name('user.temporary.link');
 
     Route::get('/me', 'Api\Me\MeController@me');
-    Route::group(['prefix' => 'users'], function() {
-        Route::patch('/', 'Api\Me\MeController@update');
-        Route::patch('/{user}', 'Api\Me\MeController@updateUserByAdmin');
-        Route::delete('/{user}', 'Api\Me\MeController@deleteUser');
-        Route::get('/', 'Api\Me\MeController@lists');
+    Route::group(['prefix' => 'users', 'namespace' => 'Api\Me'], function() {
+        Route::patch('/', 'MeController@update');
+        Route::patch('/{user}', 'MeController@updateUserByAdmin');
+        Route::delete('/{user}', 'MeController@deleteUser');
+        Route::get('/', 'MeController@lists');
     });
 
-    Route::group(['prefix' => 'roles'], function() {
-        Route::get('/', 'Api\Role\RoleController@lists');
-        Route::post('/', 'Api\Role\RoleController@store');
-        Route::patch('/{role}', 'Api\Role\RoleController@update');
-        Route::delete('/{role}', 'Api\Role\RoleController@delete');
-        Route::patch('/{role}/permissions', 'Api\Role\RoleController@assignPermissions');
+    Route::group(['prefix' => 'roles', 'namespace' => 'Api\Role'], function() {
+        Route::get('/', 'RoleController@lists');
+        Route::post('/', 'RoleController@store');
+        Route::patch('/{role}', 'RoleController@update');
+        Route::delete('/{role}', 'RoleController@delete');
+        Route::patch('/{role}/permissions', 'RoleController@assignPermissions');
     });
 
-    Route::group(['prefix' => 'permissions'], function() {
-        Route::get('/', 'Api\Permission\PermissionController@lists');
-        Route::post('/', 'Api\Permission\PermissionController@store');
-        Route::patch('/{permission}', 'Api\Permission\PermissionController@update');
-        Route::delete('/{permission}', 'Api\Permission\PermissionController@delete');
+    Route::group(['prefix' => 'permissions', 'namespace' => 'Api\Permission'], function() {
+        Route::get('/', 'PermissionController@lists');
+        Route::post('/', 'PermissionController@store');
+        Route::patch('/{permission}', 'PermissionController@update');
+        Route::delete('/{permission}', 'PermissionController@delete');
     });
 
     Route::get('/logout', 'Api\Me\MeController@logout');
