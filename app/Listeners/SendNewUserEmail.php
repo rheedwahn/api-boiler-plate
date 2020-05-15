@@ -29,7 +29,12 @@ class SendNewUserEmail
     {
         //send email to user
         $front_end_base = \config('app.fronend_url');
-        $confirmation_link = $front_end_base.'/auth?token='.$event->user->remember_token;
+        if($front_end_base) {
+            $confirmation_link = $front_end_base.'/auth?token='.$event->user->remember_token;
+        }else {
+            $confirmation_link = route('email.verify', ['token' => $event->user->remember_token]);
+        }
+        
         $event->user->notify(new NewUserNotification($event->user, $confirmation_link));
     }
 }
