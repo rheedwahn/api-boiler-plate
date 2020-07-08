@@ -1,12 +1,14 @@
 <?php
 
-Route::group(['middleware' => 'apiLogger', 'namespace' => 'Api\Auth'], function() {
-    Route::post('/login', 'LoginController@login');
-    Route::post('/register', 'RegisterController@register');
-    Route::get('/users/{token}/verify', 'RegisterController@verify')->name('email.verify');
-    Route::post('/forgot-password', 'ForgotPasswordController@forgotPassword');
-    Route::post('/reset-password', 'ForgotPasswordController@resetPassword');
-    Route::get('users/{user}/auth', 'ForgotPasswordController@temporaryLogin')->name('user.temporary.link');
+Route::group(['middleware' => 'apiLogger'], function() {
+    Route::group(['namespace' => 'Api\Auth'], function() {
+        Route::post('/login', 'LoginController@login');
+        Route::post('/register', 'RegisterController@register');
+        Route::get('/users/{token}/verify', 'RegisterController@verify')->name('email.verify');
+        Route::post('/forgot-password', 'ForgotPasswordController@forgotPassword');
+        Route::post('/reset-password', 'ForgotPasswordController@resetPassword');
+        Route::get('users/{user}/auth', 'ForgotPasswordController@temporaryLogin')->name('user.temporary.link');
+    });
 
     Route::get('/me', 'Api\Me\MeController@me');
     Route::group(['prefix' => 'users', 'namespace' => 'Api\Me'], function() {
