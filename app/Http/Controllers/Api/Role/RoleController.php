@@ -8,8 +8,7 @@ use App\Http\Requests\Api\Role\ListRequest;
 use App\Http\Requests\Api\Role\StoreRequest;
 use App\Http\Requests\Api\Role\UpdateRequest;
 use App\Http\Resources\Api\Role\RoleResource;
-use Illuminate\Http\Request;
-use Spatie\Permission\Models\Role;
+use App\Models\Role;
 
 class RoleController extends Controller
 {
@@ -48,7 +47,7 @@ class RoleController extends Controller
     public function delete(Role $role)
     {
         $role->delete();
-        return response()->json(['status' => 'success', 'message' => 'resource deleted successfully'], 200);
+        return $this->resourceDeleted();
     }
 
     public function assignPermissions(AssignPermissionRequest $request, Role $role)

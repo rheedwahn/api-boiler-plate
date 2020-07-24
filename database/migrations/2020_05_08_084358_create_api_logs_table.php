@@ -14,7 +14,7 @@ class CreateApiLogsTable extends Migration
     public function up()
     {
         Schema::create('api_logs', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id');
             $table->string('api_reference');
             $table->string('request_method');
             $table->string('request_url');
@@ -24,8 +24,10 @@ class CreateApiLogsTable extends Migration
             $table->string('response_code');
             $table->string('ip_address');
             $table->string('user_agent');
-            $table->bigInteger('user_id')->nullable();
+            $table->uuid('user_id')->nullable();
             $table->timestamps();
+
+            $table->primary('id');
         });
     }
 

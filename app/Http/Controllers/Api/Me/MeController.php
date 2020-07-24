@@ -49,7 +49,7 @@ class MeController extends Controller
             return response()->json(['status' => 'error', 'message' => 'You cannot delete yourself'], 403);
         }
         $user->delete();
-        return response()->json(['status' => 'success', 'message' => 'resource deleted successfully'], 200);
+        return $this->resourceDeleted();
     }
 
     public function lists(ListRequest $request)

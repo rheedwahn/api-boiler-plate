@@ -8,7 +8,6 @@ use Faker\Generator as Faker;
 
 $factory->define(Profile::class, function (Faker $faker) {
     return [
-        'user_id' => 'id',
         'address' => $faker->address,
         'dob' => $faker->date
     ];

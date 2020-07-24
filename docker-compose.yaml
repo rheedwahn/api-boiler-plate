@@ -1,0 +1,82 @@
+version: '3'
+services:
+
+  # Add this top-level entry
+  redis_server:
+    image: redis:latest
+    container_name: redis_server
+    restart: unless-stopped
+    tty: true
+    expose:
+    - 6379
+    volumes:
+    - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+    - redisdata:/data
+    networks:
+    - app-network
+
+  #PHP Service
+  api_boiler_plate:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: digitalocean.com/php
+    container_name: api_boiler_plate
+    restart: unless-stopped
+    tty: true
+    environment:
+      SERVICE_NAME: publisher
+      SERVICE_TAGS: dev
+    working_dir: /var/www
+    volumes:
+    - ./:/var/www
+    - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+    - app-network
+
+  #Nginx Service
+  web_server:
+    image: nginx:alpine
+    container_name: web_server
+    restart: unless-stopped
+    tty: true
+    ports:
+    - "8090:80"
+    volumes:
+    - ./:/var/www
+    - ./nginx/conf.d/:/etc/nginx/conf.d/
+    networks:
+    - app-network
+
+  #MySQL Service
+  database_engine:
+    image: mysql:5.7.22
+    container_name: database_engine
+    restart: unless-stopped
+    tty: true
+    ports:
+    - "5306:3306"
+    environment:
+      MYSQL_DATABASE: api_boiler_plate
+      DB_USERNAME: api_user
+      DB_PASSWORD: api_user
+      MYSQL_ROOT_PASSWORD: api_user
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    volumes:
+    - dbdata:/var/lib/mysql/
+    - ./mysql/my.cnf:/etc/mysql/my.cnf
+    networks:
+    - app-network
+
+#Docker Networks
+networks:
+  app-network:
+    driver: bridge
+
+#Volumes
+volumes:
+  dbdata:
+    driver: local
+  redisdata:
+    driver: local

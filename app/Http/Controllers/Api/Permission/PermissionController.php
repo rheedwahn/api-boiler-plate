@@ -7,7 +7,7 @@ use App\Http\Requests\Api\Permission\ListRequest;
 use App\Http\Requests\Api\Permission\StoreRequest;
 use App\Http\Requests\Api\Permission\UpdateRequest;
 use App\Http\Resources\Api\Permission\PermissionResource;
-use Spatie\Permission\Models\Permission;
+use App\Models\Permission;
 
 class PermissionController extends Controller
 {
@@ -40,6 +40,6 @@ class PermissionController extends Controller
     public function delete(Permission $permission)
     {
         $permission->delete();
-        return response()->json(['status' => 'success', 'message' => 'resource deleted successfully'], 200);
+        return $this->resourceDeleted();
     }
 }

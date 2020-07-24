@@ -2,7 +2,6 @@
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Spatie\Permission\Models\Role;
 
 class RolesTableSeeder extends Seeder
 {
@@ -17,8 +16,8 @@ class RolesTableSeeder extends Seeder
         DB::table('roles')->delete();
 
         //create a new role
-        factory(Role::class)->create();
-        factory(Role::class)->create([
+        factory(\App\Models\Role::class)->create();
+        factory(\App\Models\Role::class)->create([
             'name' => 'User'
         ]);
     }

@@ -11,6 +11,7 @@ Route::group(['middleware' => 'apiLogger'], function() {
     });
 
     Route::get('/me', 'Api\Me\MeController@me');
+
     Route::group(['prefix' => 'users', 'namespace' => 'Api\Me'], function() {
         Route::patch('/', 'MeController@update');
         Route::patch('/{user}', 'MeController@updateUserByAdmin');

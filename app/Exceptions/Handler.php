@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Spatie\Permission\Exceptions\UnauthorizedException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -53,6 +54,9 @@ class Handler extends ExceptionHandler
     {
         if ($exception instanceof ModelNotFoundException && $request->wantsJson()) {
             return response()->json(['status' => 'error', 'message' => 'Resource not found'], 404);
+        }
+        if ($exception instanceof UnauthorizedException && $request->wantsJson()) {
+            return response()->json(['status' => 'error', 'message' => 'User does not have the right permissions.'], 403);
         }
         return parent::render($request, $exception);
     }

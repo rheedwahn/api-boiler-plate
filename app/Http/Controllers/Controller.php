@@ -20,6 +20,11 @@ class Controller extends BaseController
         ], 404);
     }
 
+    protected function resourceDeleted()
+    {
+        return response()->json(['status' => 'success', 'message' => 'resource deleted successfully'], 200);
+    }
+
     protected function returnToken($user, $request = null)
     {
         $tokenResult = $user->createToken('Personal Access Token');
