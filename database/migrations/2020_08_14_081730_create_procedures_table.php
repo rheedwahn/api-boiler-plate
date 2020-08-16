@@ -14,11 +14,9 @@ class CreateProceduresTable extends Migration
     public function up()
     {
         Schema::create('procedures', function (Blueprint $table) {
-            $table->uuid('id');
+            $table->id();
             $table->string('name');
             $table->timestamps();
-
-            $table->primary('id');
         });
     }
 

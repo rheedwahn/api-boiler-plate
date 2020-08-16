@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateProcedureDetailsTable extends Migration
+class CreateCountriesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,8 @@ class CreateProcedureDetailsTable extends Migration
      */
     public function up()
     {
-        Schema::create('procedure_details', function (Blueprint $table) {
+        Schema::create('countries', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('procedure_id')->index();
             $table->string('name');
             $table->timestamps();
         });
@@ -28,6 +27,6 @@ class CreateProcedureDetailsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('procedure_details');
+        Schema::dropIfExists('countries');
     }
 }

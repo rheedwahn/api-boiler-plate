@@ -2,16 +2,15 @@
 
 namespace App\Models;
 
-use App\Traits\UuidTrait;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class BaseModel extends Model
 {
     protected $guarded = [];
 
-    protected $keyType = 'string';
-
-    public $incrementing = false;
-
-    use UuidTrait;
+    public function getSlugAttribute()
+    {
+        return $this->name ? Str::slug($this->name) : null;
+    }
 }

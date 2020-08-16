@@ -14,11 +14,9 @@ class CreateMedicalInsurancesTable extends Migration
     public function up()
     {
         Schema::create('medical_insurances', function (Blueprint $table) {
-            $table->uuid('id');
+            $table->id();
             $table->string('name');
             $table->timestamps();
-
-            $table->primary('id');
         });
     }
 

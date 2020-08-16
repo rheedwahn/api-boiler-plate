@@ -14,11 +14,9 @@ class CreateDiseaseConditionsTable extends Migration
     public function up()
     {
         Schema::create('disease_conditions', function (Blueprint $table) {
-            $table->uuid('id');
+            $table->id();
             $table->string('name');
             $table->timestamps();
-
-            $table->primary('id');
         });
     }
 
