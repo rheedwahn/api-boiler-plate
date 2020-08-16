@@ -71,7 +71,7 @@ Route::group(['middleware' => 'apiLogger'], function() {
     Route::get('/medical-insurances', 'Api\MedicalInsurance\MedicalInsuranceController@lists');
     Route::get('/disease-conditions', 'Api\DiseaseCondition\DiseaseConditionController@lists');
     Route::get('/procedures', 'Api\Procedure\ProcedureController@lists');
-    Route::get('/procedures/{procedure}/details', 'Api\Procedure\ProcedureController@listDetails');
+    Route::get('/procedures/{procedure}', 'Api\Procedure\ProcedureController@listDetails');
 
     Route::get('/logout', 'Api\Me\MeController@logout');
 });
