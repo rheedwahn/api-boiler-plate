@@ -20,7 +20,7 @@ class CountryController extends Controller
 
     public function lists()
     {
-        $countries = Country::orderBy('name', 'asc')->get();
+        $countries = Country::orderNameByAsc()->get();
         return CountryResource::collection($countries);
     }
 

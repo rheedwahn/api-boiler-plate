@@ -26,7 +26,7 @@ class StateController extends Controller
 
     public function lists(Country $country)
     {
-        $states = State::where('country_id', $country->id)->orderBy('name', 'asc')->get();
+        $states = State::where('country_id', $country->id)->orderNameByAsc()->get();
         return StateResource::collection($states);
     }
 

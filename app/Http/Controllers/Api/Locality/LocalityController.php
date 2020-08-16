@@ -24,7 +24,7 @@ class LocalityController extends Controller
 
     public function lists(Country $country, State $state, City $city)
     {
-        $localities = Locality::where('city_id', $city->id)->orderBy('name', 'asc')->get();
+        $localities = Locality::where('city_id', $city->id)->orderNameByAsc()->get();
         return LocalityResource::collection($localities);
     }
 

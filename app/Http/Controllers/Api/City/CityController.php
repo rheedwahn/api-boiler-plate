@@ -23,7 +23,7 @@ class CityController extends Controller
 
     public function lists(Country $country, State $state)
     {
-        $cities = City::where('state_id', $state->id)->orderBy('name', 'asc')->get();
+        $cities = City::where('state_id', $state->id)->orderNameByAsc()->get();
         return CityResource::collection($cities);
     }
 
