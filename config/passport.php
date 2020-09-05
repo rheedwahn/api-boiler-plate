@@ -28,6 +28,6 @@ return [
     |
     */
 
-    'client_uuids' => true,
+    'client_uuids' => false,
 
 ];

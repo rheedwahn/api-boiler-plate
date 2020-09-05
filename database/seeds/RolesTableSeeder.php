@@ -18,7 +18,10 @@ class RolesTableSeeder extends Seeder
         //create a new role
         factory(\App\Models\Role::class)->create();
         factory(\App\Models\Role::class)->create([
-            'name' => 'User'
+            'name' => 'Doctor'
+        ]);
+        factory(\App\Models\Role::class)->create([
+            'name' => 'Patient'
         ]);
     }
 }

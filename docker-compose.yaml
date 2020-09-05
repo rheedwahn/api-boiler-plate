@@ -2,9 +2,9 @@ version: '3'
 services:
 
   # Add this top-level entry
-  redis_server:
+  clinified_redis_server:
     image: redis:latest
-    container_name: redis_server
+    container_name: clinified_redis_server
     restart: unless-stopped
     tty: true
     expose:
@@ -16,16 +16,16 @@ services:
     - app-network
 
   #PHP Service
-  api_boiler_plate:
+  clinified_app:
     build:
       context: .
       dockerfile: Dockerfile
     image: digitalocean.com/php
-    container_name: api_boiler_plate
+    container_name: clinified_app
     restart: unless-stopped
     tty: true
     environment:
-      SERVICE_NAME: publisher
+      SERVICE_NAME: clinified_app
       SERVICE_TAGS: dev
     working_dir: /var/www
     volumes:
@@ -35,13 +35,13 @@ services:
     - app-network
 
   #Nginx Service
-  web_server:
+  clinified_server:
     image: nginx:alpine
-    container_name: web_server
+    container_name: clinified_server
     restart: unless-stopped
     tty: true
     ports:
-    - "8090:80"
+    - "8060:80"
     volumes:
     - ./:/var/www
     - ./nginx/conf.d/:/etc/nginx/conf.d/
@@ -49,15 +49,15 @@ services:
     - app-network
 
   #MySQL Service
-  database_engine:
+  clinified_db:
     image: mysql:5.7.22
-    container_name: database_engine
+    container_name: clinified_db
     restart: unless-stopped
     tty: true
     ports:
-    - "5306:3306"
+    - "53061:3306"
     environment:
-      MYSQL_DATABASE: api_boiler_plate
+      MYSQL_DATABASE: clinified_app
       DB_USERNAME: api_user
       DB_PASSWORD: api_user
       MYSQL_ROOT_PASSWORD: api_user
