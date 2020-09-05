@@ -84,7 +84,7 @@ There are many reasons you might want to go into the containers, i.e run some co
 
 For first time installation, after successful start of the containers, you ll need to go into the app container with the command `docker-compose exec api_boiler_plate bash` and run the following :
 * `php artisan migrate`
-* `php artisan passport:install --uuid`  this will prompt for the re run of the migration
+* `php artisan passport:install --uuids`  this will prompt for the re run of the migration
 * `php artisan db:seed`
 
 

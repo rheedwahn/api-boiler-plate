@@ -48,6 +48,42 @@ services:
     networks:
     - app-network
 
+  api_scheduler:
+    image: digitalocean.com/php
+    container_name: api_scheduler
+    depends_on:
+    - api_boiler_plate
+    volumes:
+    - .:/var/www
+    environment:
+      APP_ENV: local
+      CONTAINER_ROLE: scheduler
+      CACHE_DRIVER: redis
+      SESSION_DRIVER: redis
+      QUEUE_DRIVER: redis
+      QUEUE_CONNECTION: redis_server
+      REDIS_HOST: redis_server
+    networks:
+    - app-network
+
+  api_queue:
+    image: digitalocean.com/php
+    container_name: api_queue
+    depends_on:
+    - api_boiler_plate
+    volumes:
+    - .:/var/www
+    environment:
+      APP_ENV: local
+      CONTAINER_ROLE: queue
+      CACHE_DRIVER: redis
+      SESSION_DRIVER: redis
+      QUEUE_DRIVER: redis
+      QUEUE_CONNECTION: redis_server
+      REDIS_HOST: redis_server
+    networks:
+    - app-network
+
   #MySQL Service
   database_engine:
     image: mysql:5.7.22
