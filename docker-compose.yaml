@@ -25,7 +25,7 @@ services:
     restart: unless-stopped
     tty: true
     environment:
-      SERVICE_NAME: publisher
+      SERVICE_NAME: clinified_app
       SERVICE_TAGS: dev
     working_dir: /var/www
     volumes:
@@ -35,29 +35,65 @@ services:
     - app-network
 
   #Nginx Service
-  web_server:
+  api_server:
     image: nginx:alpine
-    container_name: web_server
+    container_name: api_server
     restart: unless-stopped
     tty: true
     ports:
-    - "8090:80"
+    - "8020:80"
     volumes:
     - ./:/var/www
     - ./nginx/conf.d/:/etc/nginx/conf.d/
     networks:
     - app-network
 
+  api_scheduler:
+    image: digitalocean.com/php
+    container_name: api_scheduler
+    depends_on:
+    - api_boiler_plate
+    volumes:
+    - .:/var/www
+    environment:
+      APP_ENV: local
+      CONTAINER_ROLE: scheduler
+      CACHE_DRIVER: redis
+      SESSION_DRIVER: redis
+      QUEUE_DRIVER: redis
+      QUEUE_CONNECTION: redis_server
+      REDIS_HOST: redis_server
+    networks:
+    - app-network
+
+  api_queue:
+    image: digitalocean.com/php
+    container_name: api_queue
+    depends_on:
+    - api_boiler_plate
+    volumes:
+    - .:/var/www
+    environment:
+      APP_ENV: local
+      CONTAINER_ROLE: queue
+      CACHE_DRIVER: redis
+      SESSION_DRIVER: redis
+      QUEUE_DRIVER: redis
+      QUEUE_CONNECTION: redis_server
+      REDIS_HOST: redis_server
+    networks:
+    - app-network
+
   #MySQL Service
-  database_engine:
+  api_db:
     image: mysql:5.7.22
-    container_name: database_engine
+    container_name: api_db
     restart: unless-stopped
     tty: true
     ports:
-    - "5306:3306"
+    - "33061:3306"
     environment:
-      MYSQL_DATABASE: api_boiler_plate
+      MYSQL_DATABASE: api_db
       DB_USERNAME: api_user
       DB_PASSWORD: api_user
       MYSQL_ROOT_PASSWORD: api_user
