@@ -1,113 +1,53 @@
-version: '3'
+version: "3.7"
 services:
+  api:
+    build:
+      context: .
+    restart: unless-stopped
+    tty: true
+    container_name: api
+    environment:
+      APP_NAME: 'Api Boiler Plate'
+    volumes:
+      - ./:/var/www/app
+      - /var/www/app/vendor
+    ports:
+      - "8090:80"
+    networks:
+      - api
 
-  # Add this top-level entry
-  redis_server:
+  redis:
     image: redis:latest
-    container_name: redis_server
+    container_name: redis
     restart: unless-stopped
     tty: true
     expose:
-    - 6379
+      - 6379
     volumes:
-    - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
-    - redisdata:/data
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+      - redisdata:/data
     networks:
-    - app-network
+      - api
 
-  #PHP Service
-  api_boiler_plate:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: digitalocean.com/php
-    container_name: api_boiler_plate
-    restart: unless-stopped
-    tty: true
-    environment:
-      SERVICE_NAME: clinified_app
-      SERVICE_TAGS: dev
-    working_dir: /var/www
-    volumes:
-    - ./:/var/www
-    - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
-    networks:
-    - app-network
-
-  #Nginx Service
-  api_server:
-    image: nginx:alpine
-    container_name: api_server
+  database:
+    image: mysql:latest
+    container_name: database
     restart: unless-stopped
     tty: true
     ports:
-    - "8020:80"
-    volumes:
-    - ./:/var/www
-    - ./nginx/conf.d/:/etc/nginx/conf.d/
-    networks:
-    - app-network
-
-  api_scheduler:
-    image: digitalocean.com/php
-    container_name: api_scheduler
-    depends_on:
-    - api_boiler_plate
-    volumes:
-    - .:/var/www
+      - "3306:3306"
     environment:
-      APP_ENV: local
-      CONTAINER_ROLE: scheduler
-      CACHE_DRIVER: redis
-      SESSION_DRIVER: redis
-      QUEUE_DRIVER: redis
-      QUEUE_CONNECTION: redis_server
-      REDIS_HOST: redis_server
-    networks:
-    - app-network
-
-  api_queue:
-    image: digitalocean.com/php
-    container_name: api_queue
-    depends_on:
-    - api_boiler_plate
+      MYSQL_DATABASE: api
+      DB_USERNAME: api
+      DB_PASSWORD: apiUser1.
+      MYSQL_ROOT_PASSWORD: apiUser1.
     volumes:
-    - .:/var/www
-    environment:
-      APP_ENV: local
-      CONTAINER_ROLE: queue
-      CACHE_DRIVER: redis
-      SESSION_DRIVER: redis
-      QUEUE_DRIVER: redis
-      QUEUE_CONNECTION: redis_server
-      REDIS_HOST: redis_server
+      - dbdata:/var/lib/mysql/
     networks:
-    - app-network
+      - api
 
-  #MySQL Service
-  api_db:
-    image: mysql:5.7.22
-    container_name: api_db
-    restart: unless-stopped
-    tty: true
-    ports:
-    - "33061:3306"
-    environment:
-      MYSQL_DATABASE: api_db
-      DB_USERNAME: api_user
-      DB_PASSWORD: api_user
-      MYSQL_ROOT_PASSWORD: api_user
-      SERVICE_TAGS: dev
-      SERVICE_NAME: mysql
-    volumes:
-    - dbdata:/var/lib/mysql/
-    - ./mysql/my.cnf:/etc/mysql/my.cnf
-    networks:
-    - app-network
-
-#Docker Networks
 networks:
-  app-network:
+  api:
     driver: bridge
 
 #Volumes
