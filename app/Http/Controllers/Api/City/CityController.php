@@ -9,7 +9,9 @@ use App\Http\Resources\Api\State\CityResource;
 use App\Models\City;
 use App\Models\Country;
 use App\Models\State;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class CityController extends Controller
 {
@@ -21,13 +23,24 @@ class CityController extends Controller
         $this->middleware('role:Admin')->only(self::PROTECTED_ACTIONS);
     }
 
-    public function lists(Country $country, State $state)
+    /**
+     * @param Country $country
+     * @param State $state
+     * @return AnonymousResourceCollection
+     */
+    public function lists(Country $country, State $state): AnonymousResourceCollection
     {
         $cities = City::where('state_id', $state->id)->orderNameByAsc()->get();
         return CityResource::collection($cities);
     }
 
-    public function store(StoreRequest $request, Country $country, State $state)
+    /**
+     * @param StoreRequest $request
+     * @param Country $country
+     * @param State $state
+     * @return CityResource
+     */
+    public function store(StoreRequest $request, Country $country, State $state): CityResource
     {
         $city = new City();
         $city->name = $request->name;
@@ -36,14 +49,27 @@ class CityController extends Controller
         return new CityResource($city);
     }
 
-    public function update(UpdateRequest $request, Country $country, State $state, City $city)
+    /**
+     * @param UpdateRequest $request
+     * @param Country $country
+     * @param State $state
+     * @param City $city
+     * @return CityResource
+     */
+    public function update(UpdateRequest $request, Country $country, State $state, City $city): CityResource
     {
         $city->name = $request->name;
         $city->save();
         return new CityResource($city);
     }
 
-    public function delete(Country $country, State $state, City $city)
+    /**
+     * @param Country $country
+     * @param State $state
+     * @param City $city
+     * @return JsonResponse
+     */
+    public function delete(Country $country, State $state, City $city): JsonResponse
     {
         $city->delete();
         return $this->resourceDeleted();

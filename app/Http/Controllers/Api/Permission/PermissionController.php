@@ -8,10 +8,16 @@ use App\Http\Requests\Api\Permission\StoreRequest;
 use App\Http\Requests\Api\Permission\UpdateRequest;
 use App\Http\Resources\Api\Permission\PermissionResource;
 use App\Models\Permission;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class PermissionController extends Controller
 {
-    public function lists(ListRequest $request)
+    /**
+     * @param ListRequest $request
+     * @return AnonymousResourceCollection
+     */
+    public function lists(ListRequest $request): AnonymousResourceCollection
     {
         $permissions = Permission::when($request->name, function($query) use($request) {
             return $query->where('name', 'LIKE', '%'.$request->name.'%');
@@ -19,7 +25,11 @@ class PermissionController extends Controller
         return PermissionResource::collection($permissions);
     }
 
-    public function store(StoreRequest $request)
+    /**
+     * @param StoreRequest $request
+     * @return PermissionResource
+     */
+    public function store(StoreRequest $request): PermissionResource
     {
         $permission = new Permission();
         $permission->name = $request->name;
@@ -29,7 +39,12 @@ class PermissionController extends Controller
         return new PermissionResource($permission);
     }
 
-    public function update(UpdateRequest $request, Permission $permission)
+    /**
+     * @param UpdateRequest $request
+     * @param Permission $permission
+     * @return PermissionResource
+     */
+    public function update(UpdateRequest $request, Permission $permission): PermissionResource
     {
         $permission->name = $request->name;
         $permission->save();
@@ -37,7 +52,11 @@ class PermissionController extends Controller
         return new PermissionResource($permission);
     }
 
-    public function delete(Permission $permission)
+    /**
+     * @param Permission $permission
+     * @return JsonResponse
+     */
+    public function delete(Permission $permission): JsonResponse
     {
         $permission->delete();
         return $this->resourceDeleted();

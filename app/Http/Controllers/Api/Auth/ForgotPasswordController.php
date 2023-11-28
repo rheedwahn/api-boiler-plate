@@ -8,6 +8,7 @@ use App\Http\Requests\Api\Auth\ResetPasswordRequest;
 use App\Models\User;
 use App\Notifications\SendTemporaryLinkMail;
 use App\Traits\TemporaryUrlTrait;
+use Illuminate\Http\JsonResponse;
 
 class ForgotPasswordController extends Controller
 {
@@ -18,14 +19,22 @@ class ForgotPasswordController extends Controller
         $this->middleware('auth:api')->only('resetPassword');
     }
 
-    public function forgotPassword(ForgotPasswordRequest $request)
+    /**
+     * @param ForgotPasswordRequest $request
+     * @return JsonResponse
+     */
+    public function forgotPassword(ForgotPasswordRequest $request): JsonResponse
     {
         $user = User::where('email', $request->email)->first();
         $this->sendUserTemporaryMail($user);
         return response()->json(['status' => 'success', 'message' => 'Please check your email for reset password link']);
     }
 
-    public function resetPassword(ResetPasswordRequest $request)
+    /**
+     * @param ResetPasswordRequest $request
+     * @return JsonResponse
+     */
+    public function resetPassword(ResetPasswordRequest $request): JsonResponse
     {
         $user = $request->user();
         $user->password = $request->password;
@@ -33,7 +42,11 @@ class ForgotPasswordController extends Controller
         return response()->json(['status' => 'success', 'message' => 'Password set successfully']);
     }
 
-    public function temporaryLogin(User $user)
+    /**
+     * @param User $user
+     * @return JsonResponse
+     */
+    public function temporaryLogin(User $user): JsonResponse
     {
         if(!request()->hasValidSignature()) {
             $this->sendUserTemporaryMail($user);
@@ -41,7 +54,11 @@ class ForgotPasswordController extends Controller
         return $this->returnToken($user);
     }
 
-    protected function sendUserTemporaryMail($user)
+    /**
+     * @param $user
+     * @return void
+     */
+    protected function sendUserTemporaryMail($user): void
     {
         $api_route_parameter = $this->getTemporaryUrl($user);
         $full_route = config('app.fronend_url').'/'.$api_route_parameter;

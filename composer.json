@@ -11,7 +11,8 @@
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
         "spatie/laravel-permission": "^6",
-        "laravel/passport": "^11"
+        "laravel/passport": "^11",
+        "tymon/jwt-auth": "^2.0.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

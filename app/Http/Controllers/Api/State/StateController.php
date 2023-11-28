@@ -12,7 +12,9 @@ use App\Models\City;
 use App\Models\Country;
 use App\Models\Locality;
 use App\Models\State;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class StateController extends Controller
 {
@@ -24,13 +26,22 @@ class StateController extends Controller
         $this->middleware('role:Admin')->only(self::PROTECTED_ACTIONS);
     }
 
-    public function lists(Country $country)
+    /**
+     * @param Country $country
+     * @return AnonymousResourceCollection
+     */
+    public function lists(Country $country): AnonymousResourceCollection
     {
         $states = State::where('country_id', $country->id)->orderNameByAsc()->get();
         return StateResource::collection($states);
     }
 
-    public function store(StoreRequest $request, Country $country)
+    /**
+     * @param StoreRequest $request
+     * @param Country $country
+     * @return StateResource
+     */
+    public function store(StoreRequest $request, Country $country): StateResource
     {
         $state = new State();
         $state->country_id = $country->id;
@@ -39,14 +50,25 @@ class StateController extends Controller
         return new StateResource($state);
     }
 
-    public function update(UpdateRequest $request, Country $country, State $state)
+    /**
+     * @param UpdateRequest $request
+     * @param Country $country
+     * @param State $state
+     * @return StateResource
+     */
+    public function update(UpdateRequest $request, Country $country, State $state): StateResource
     {
         $state->name = $request->name;
         $state->save();
         return new StateResource($state);
     }
 
-    public function delete(Country $country, State $state)
+    /**
+     * @param Country $country
+     * @param State $state
+     * @return JsonResponse
+     */
+    public function delete(Country $country, State $state): JsonResponse
     {
         $state->delete();
         return $this->resourceDeleted();

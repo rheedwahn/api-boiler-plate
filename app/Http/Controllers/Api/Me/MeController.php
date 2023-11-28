@@ -11,7 +11,9 @@ use App\Http\Resources\Api\User\UserResource;
 use App\Models\User;
 use App\Services\User\AdminUserUpdateService;
 use App\Services\User\UpdateService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class MeController extends Controller
 {
@@ -21,19 +23,31 @@ class MeController extends Controller
         $this->middleware('role:Admin')->only(['updateUserByAdmin', 'deleteUser', 'lists']);
     }
 
-    public function me()
+    /**
+     * @return UserResource
+     */
+    public function me(): UserResource
     {
         return new UserResource(request()->user());
     }
 
-    public function update(UpdateRequest $request)
+    /**
+     * @param UpdateRequest $request
+     * @return UserResource
+     */
+    public function update(UpdateRequest $request): UserResource
     {
         $data = $request->all();
         (new UpdateService($data, $request->user(), $request->user()->profile))->run();
         return new UserResource(User::find($request->user()->id));
     }
 
-    public function updateUserByAdmin(UpdateUserByAdminRequest $request, User $user)
+    /**
+     * @param UpdateUserByAdminRequest $request
+     * @param User $user
+     * @return UserResource|JsonResponse
+     */
+    public function updateUserByAdmin(UpdateUserByAdminRequest $request, User $user): JsonResponse|UserResource
     {
         $data = $request->all();
         if(isset($data['status']) && !\in_array($data['status'], UserStatus::$userStatuses)) {
@@ -43,7 +57,12 @@ class MeController extends Controller
         return new UserResource(User::find($user->id));
     }
 
-    public function deleteUser(Request $request, User $user)
+    /**
+     * @param Request $request
+     * @param User $user
+     * @return JsonResponse
+     */
+    public function deleteUser(Request $request, User $user): JsonResponse
     {
         if($request->user()->id === $user->id) {
             return response()->json(['status' => 'error', 'message' => 'You cannot delete yourself'], 403);
@@ -52,7 +71,11 @@ class MeController extends Controller
         return $this->resourceDeleted();
     }
 
-    public function lists(ListRequest $request)
+    /**
+     * @param ListRequest $request
+     * @return AnonymousResourceCollection
+     */
+    public function lists(ListRequest $request): AnonymousResourceCollection
     {
         $users = User::when($request->name, function($query) use($request) {
             return $query->where('name', 'LIKE', '%'.$request->name.'%');
@@ -60,7 +83,10 @@ class MeController extends Controller
         return UserResource::collection($users);
     }
 
-    public function logout()
+    /**
+     * @return JsonResponse
+     */
+    public function logout(): JsonResponse
     {
         $token = request()->user()->token();
         $token->revoke();

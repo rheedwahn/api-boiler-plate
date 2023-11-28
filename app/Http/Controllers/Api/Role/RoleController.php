@@ -9,6 +9,8 @@ use App\Http\Requests\Api\Role\StoreRequest;
 use App\Http\Requests\Api\Role\UpdateRequest;
 use App\Http\Resources\Api\Role\RoleResource;
 use App\Models\Role;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class RoleController extends Controller
 {
@@ -18,7 +20,11 @@ class RoleController extends Controller
         $this->middleware('role:Admin');
     }
 
-    public function lists(ListRequest $request)
+    /**
+     * @param ListRequest $request
+     * @return AnonymousResourceCollection
+     */
+    public function lists(ListRequest $request): AnonymousResourceCollection
     {
         $roles = Role::when($request->name, function($query) use($request) {
             return $query->where('name', 'LIKE', '%'.$request->name.'%');
@@ -26,7 +32,11 @@ class RoleController extends Controller
         return RoleResource::collection($roles);
     }
 
-    public function store(StoreRequest $request)
+    /**
+     * @param StoreRequest $request
+     * @return RoleResource
+     */
+    public function store(StoreRequest $request): RoleResource
     {
         $role = new Role();
         $role->name = $request->name;
@@ -36,7 +46,12 @@ class RoleController extends Controller
         return new RoleResource($role);
     }
 
-    public function update(UpdateRequest $request, Role $role)
+    /**
+     * @param UpdateRequest $request
+     * @param Role $role
+     * @return RoleResource
+     */
+    public function update(UpdateRequest $request, Role $role): RoleResource
     {
         $role->name = $request->name;
         $role->save();
@@ -44,13 +59,22 @@ class RoleController extends Controller
         return new RoleResource($role);
     }
 
-    public function delete(Role $role)
+    /**
+     * @param Role $role
+     * @return JsonResponse
+     */
+    public function delete(Role $role): JsonResponse
     {
         $role->delete();
         return $this->resourceDeleted();
     }
 
-    public function assignPermissions(AssignPermissionRequest $request, Role $role)
+    /**
+     * @param AssignPermissionRequest $request
+     * @param Role $role
+     * @return RoleResource
+     */
+    public function assignPermissions(AssignPermissionRequest $request, Role $role): RoleResource
     {
         $role->syncPermissions($request->permissions);
         return new RoleResource(Role::find($role->id));

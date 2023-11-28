@@ -7,6 +7,8 @@ use App\Http\Requests\Api\Country\StoreRequest;
 use App\Http\Requests\Api\Country\UpdateRequest;
 use App\Http\Resources\Api\Country\CountryResource;
 use App\Models\Country;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class CountryController extends Controller
 {
@@ -18,13 +20,20 @@ class CountryController extends Controller
         $this->middleware('role:Admin')->only(self::PROTECTED_ACTIONS);
     }
 
-    public function lists()
+    /**
+     * @return AnonymousResourceCollection
+     */
+    public function lists(): AnonymousResourceCollection
     {
         $countries = Country::orderNameByAsc()->get();
         return CountryResource::collection($countries);
     }
 
-    public function store(StoreRequest $request)
+    /**
+     * @param StoreRequest $request
+     * @return CountryResource
+     */
+    public function store(StoreRequest $request): CountryResource
     {
         $country = new Country();
         $country->name = $request->name;
@@ -32,14 +41,23 @@ class CountryController extends Controller
         return new CountryResource($country);
     }
 
-    public function update(UpdateRequest $request, Country $country)
+    /**
+     * @param UpdateRequest $request
+     * @param Country $country
+     * @return CountryResource
+     */
+    public function update(UpdateRequest $request, Country $country): CountryResource
     {
         $country->name = $request->name;
         $country->save();
         return new CountryResource($country);
     }
 
-    public function delete(Country $country)
+    /**
+     * @param Country $country
+     * @return JsonResponse
+     */
+    public function delete(Country $country): JsonResponse
     {
         $country->delete();
         return $this->resourceDeleted();

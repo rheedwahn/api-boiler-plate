@@ -2,19 +2,22 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
     use Notifiable, HasApiTokens, HasRoles;
 
     protected $keyType = 'string';
     public $incrementing = false;
 
-    protected $guard_name = 'api';
+    protected string $guard_name = 'api';
 
     /**
      * The attributes that are mass assignable.
@@ -49,20 +52,46 @@ class User extends Authenticatable
      * @param [type] $password
      * @return void
      */
-    public function setPasswordAttribute($password)
+    public function setPasswordAttribute($password): void
     {
         if ( !empty($password) ) {
             $this->attributes['password'] = bcrypt($password);
         }
     }
 
-    public function api_logs()
+    /**
+     * @return HasMany
+     */
+    public function api_logs(): HasMany
     {
         return $this->hasMany(ApiLog::class);
     }
 
-    public function profile()
+    /**
+     * @return HasOne
+     */
+    public function profile(): HasOne
     {
         return $this->hasOne(Profile::class);
+    }
+
+    /**
+     * Get the identifier that will be stored in the subject claim of the JWT.
+     *
+     * @return mixed
+     */
+    public function getJWTIdentifier(): mixed
+    {
+        return $this->getKey();
+    }
+
+    /**
+     * Return a key value array, containing any custom claims to be added to the JWT.
+     *
+     * @return array
+     */
+    public function getJWTCustomClaims(): array
+    {
+        return [];
     }
 }

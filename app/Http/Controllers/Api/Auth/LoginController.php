@@ -6,11 +6,16 @@ use App\Enum\UserStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Auth\LoginRequest;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
-    public function login(LoginRequest $request)
+    /**
+     * @param LoginRequest $request
+     * @return JsonResponse
+     */
+    public function login(LoginRequest $request): JsonResponse
     {
         $credentials = ['email' => $request->email, 'password' => $request->password];
         if(!Auth::attempt($credentials)) {
@@ -27,15 +32,21 @@ class LoginController extends Controller
         return $this->returnToken($user, $request);
     }
 
-    private function invalidCredentials()
+    /**
+     * @return JsonResponse
+     */
+    private function invalidCredentials(): JsonResponse
     {
         return response()->json([
             'status' => 'error',
-            'message' => 'email and or pasword does not match'
+            'message' => 'email and or password does not match'
         ], 401);
     }
 
-    private function inactiveUser()
+    /**
+     * @return JsonResponse
+     */
+    private function inactiveUser(): JsonResponse
     {
         return response()->json([
             'status' => 'error',

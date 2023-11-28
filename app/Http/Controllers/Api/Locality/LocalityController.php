@@ -10,7 +10,9 @@ use App\Models\City;
 use App\Models\Country;
 use App\Models\Locality;
 use App\Models\State;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class LocalityController extends Controller
 {
@@ -22,13 +24,26 @@ class LocalityController extends Controller
         $this->middleware('role:Admin')->only(self::PROTECTED_ACTIONS);
     }
 
-    public function lists(Country $country, State $state, City $city)
+    /**
+     * @param Country $country
+     * @param State $state
+     * @param City $city
+     * @return AnonymousResourceCollection
+     */
+    public function lists(Country $country, State $state, City $city): AnonymousResourceCollection
     {
         $localities = Locality::where('city_id', $city->id)->orderNameByAsc()->get();
         return LocalityResource::collection($localities);
     }
 
-    public function store(StoreRequest $request, Country $country, State $state, City $city)
+    /**
+     * @param StoreRequest $request
+     * @param Country $country
+     * @param State $state
+     * @param City $city
+     * @return LocalityResource
+     */
+    public function store(StoreRequest $request, Country $country, State $state, City $city): LocalityResource
     {
         $locality = new Locality();
         $locality->city_id = $city->id;
@@ -37,14 +52,29 @@ class LocalityController extends Controller
         return new LocalityResource($locality);
     }
 
-    public function update(UpdateRequest $request, Country $country, State $state, City $city, Locality $locality)
+    /**
+     * @param UpdateRequest $request
+     * @param Country $country
+     * @param State $state
+     * @param City $city
+     * @param Locality $locality
+     * @return LocalityResource
+     */
+    public function update(UpdateRequest $request, Country $country, State $state, City $city, Locality $locality): LocalityResource
     {
         $locality->name = $request->name;
         $locality->save();
         return new LocalityResource($locality);
     }
 
-    public function delete(Country $country, State $state, City $city, Locality $locality)
+    /**
+     * @param Country $country
+     * @param State $state
+     * @param City $city
+     * @param Locality $locality
+     * @return JsonResponse
+     */
+    public function delete(Country $country, State $state, City $city, Locality $locality): JsonResponse
     {
         $locality->delete();
         return $this->resourceDeleted();
