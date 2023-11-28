@@ -1,0 +1,40 @@
+server {
+    listen 80;
+
+    root /var/www/app/public/;
+    charset utf8;
+
+    index index.php index.html index.htm;
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    open_file_cache          max=2000 inactive=20s;
+    open_file_cache_valid    60s;
+    open_file_cache_min_uses 5;
+    open_file_cache_errors   off;
+
+    location ~ .*\.(js|css)?$ {
+        expires      1h;
+    }
+
+    location ~ .php$ {
+        # connect to a unix domain-socket:
+        # fastcgi_pass   unix:/var/run/php/php8.1-fpm.sock;
+        fastcgi_pass    unix:/run/php/php-fpm.sock;
+        fastcgi_index   index.php;
+
+        fastcgi_param   SCRIPT_FILENAME    $document_root$fastcgi_script_name;
+        fastcgi_param   SCRIPT_NAME        $fastcgi_script_name;
+        fastcgi_param   HTTPS $fe_https;
+
+        fastcgi_buffer_size 128k;
+        fastcgi_buffers 256 16k;
+        fastcgi_busy_buffers_size 256k;
+        fastcgi_temp_file_write_size 256k;
+
+        # This file is present on Debian systems..
+        include fastcgi_params;
+    }
+}
