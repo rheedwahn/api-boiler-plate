@@ -1,73 +1,75 @@
 <?php
 
-Route::group(['middleware' => 'apiLogger'], function() {
-    Route::group(['namespace' => 'Api\Auth'], function() {
-        Route::post('/login', 'LoginController@login');
-        Route::post('/register', 'RegisterController@register');
-        Route::get('/users/{token}/verify', 'RegisterController@verify')->name('email.verify');
-        Route::post('/forgot-password', 'ForgotPasswordController@forgotPassword');
-        Route::post('/reset-password', 'ForgotPasswordController@resetPassword');
-        Route::get('users/{user}/auth', 'ForgotPasswordController@temporaryLogin')->name('user.temporary.link');
+use App\Http\Controllers\Api\Auth\ForgotPasswordController;
+use App\Http\Controllers\Api\Auth\LoginController;
+use App\Http\Controllers\Api\Auth\RegisterController;
+use App\Http\Controllers\Api\City\CityController;
+use App\Http\Controllers\Api\Country\CountryController;
+use App\Http\Controllers\Api\Locality\LocalityController;
+use App\Http\Controllers\Api\Me\MeController;
+use App\Http\Controllers\Api\Permission\PermissionController;
+use App\Http\Controllers\Api\Role\RoleController;
+use App\Http\Controllers\Api\State\StateController;
+use Illuminate\Support\Facades\Route;
+
+Route::group(['middleware' => 'apiLogger'], function () {
+    Route::post('/login', [LoginController::class, 'login']);
+    Route::post('/register', [RegisterController::class, 'register']);
+    Route::get('/users/{token}/verify', [RegisterController::class, 'verify'])->name('email.verify');
+    Route::post('/forgot-password', [ForgotPasswordController::class, 'forgotPassword']);
+    Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword']);
+    Route::get('users/{user}/auth', [ForgotPasswordController::class, 'temporaryLogin'])->name('user.temporary.link');
+
+    Route::get('/me', [MeController::class, 'me']);
+
+    Route::group(['prefix' => 'users'], function () {
+        Route::patch('/', [MeController::class, 'update']);
+        Route::patch('/{user}', [MeController::class, 'updateUserByAdmin']);
+        Route::delete('/{user}', [MeController::class, 'deleteUser']);
+        Route::get('/', [MeController::class, 'lists']);
     });
 
-    Route::get('/me', 'Api\Me\MeController@me');
-
-    Route::group(['prefix' => 'users', 'namespace' => 'Api\Me'], function() {
-        Route::patch('/', 'MeController@update');
-        Route::patch('/{user}', 'MeController@updateUserByAdmin');
-        Route::delete('/{user}', 'MeController@deleteUser');
-        Route::get('/', 'MeController@lists');
+    Route::group(['prefix' => 'roles'], function () {
+        Route::get('/', [RoleController::class, 'lists']);
+        Route::post('/', [RoleController::class, 'store']);
+        Route::patch('/{role}', [RoleController::class, 'update']);
+        Route::delete('/{role}', [RoleController::class, 'delete']);
+        Route::patch('/{role}/permissions', [RoleController::class, 'assignPermissions']);
     });
 
-    Route::group(['prefix' => 'roles', 'namespace' => 'Api\Role'], function() {
-        Route::get('/', 'RoleController@lists');
-        Route::post('/', 'RoleController@store');
-        Route::patch('/{role}', 'RoleController@update');
-        Route::delete('/{role}', 'RoleController@delete');
-        Route::patch('/{role}/permissions', 'RoleController@assignPermissions');
-    });
-
-    Route::group(['prefix' => 'permissions', 'namespace' => 'Api\Permission'], function() {
-        Route::get('/', 'PermissionController@lists');
-        Route::post('/', 'PermissionController@store');
-        Route::patch('/{permission}', 'PermissionController@update');
-        Route::delete('/{permission}', 'PermissionController@delete');
+    Route::group(['prefix' => 'permissions'], function () {
+        Route::get('/', [PermissionController::class, 'lists']);
+        Route::post('/', [PermissionController::class, 'store']);
+        Route::patch('/{permission}', [PermissionController::class, 'update']);
+        Route::delete('/{permission}', [PermissionController::class, 'delete']);
     });
 
     Route::group(['prefix' => 'countries'], function () {
-        Route::group(['namespace' => 'Api\Country'], function() {
-            Route::get('/', 'CountryController@lists');
-            Route::post('/', 'CountryController@store');
-            Route::patch('/{country}', 'CountryController@update');
-            Route::delete('/{country}', 'CountryController@delete');
-        });
-        Route::group(['prefix' => '{country}/states'], function() {
-            Route::group(['namespace' => 'Api\State'], function() {
-                Route::get('/', 'StateController@lists');
-                Route::post('/', 'StateController@store');
-                Route::patch('/{country}', 'StateController@update');
-                Route::delete('/{country}', 'StateController@delete');
-            });
-            Route::group(['prefix' => '{state}/cities'], function() {
-                Route::group(['namespace' => 'Api\City'], function() {
-                    Route::get('/', 'CityController@lists');
-                    Route::post('/', 'CityController@store');
-                    Route::patch('/{country}', 'CityController@update');
-                    Route::delete('/{country}', 'CityController@delete');
-                });
-                Route::group(['prefix' => '{city}/localities'], function() {
-                    Route::group(['namespace' => 'Api\Locality'], function() {
-                        Route::get('/', 'LocalityController@lists');
-                        Route::post('/', 'LocalityController@store');
-                        Route::patch('/{country}', 'LocalityController@update');
-                        Route::delete('/{country}', 'LocalityController@delete');
-                    });
+        Route::get('/', [CountryController::class, 'lists']);
+        Route::post('/', [CountryController::class, 'store']);
+        Route::patch('/{country}', [CountryController::class, 'update']);
+        Route::delete('/{country}', [CountryController::class, 'delete']);
+        Route::group(['prefix' => '{country}/states'], function () {
+            Route::get('/', [StateController::class, 'lists']);
+            Route::post('/', [StateController::class, 'store']);
+            Route::patch('/{state}', [StateController::class, 'update']);
+            Route::delete('/{state}', [StateController::class, 'delete']);
+            Route::group(['prefix' => '{state}/cities'], function () {
+                Route::get('/', [CityController::class, 'lists']);
+                Route::post('/', [CityController::class, 'store']);
+                Route::patch('/{city}', [CityController::class, 'update']);
+                Route::delete('/{city}', [CityController::class, 'delete']);
+                Route::group(['prefix' => '{city}/localities'], function () {
+                    Route::get('/', [LocalityController::class, 'lists']);
+                    Route::post('/', [LocalityController::class, 'store']);
+                    Route::patch('/{locality}', [LocalityController::class, 'update']);
+                    Route::delete('/{locality}', [LocalityController::class, 'delete']);
                 });
             });
         });
     });
 
-    Route::get('/logout', 'Api\Me\MeController@logout');
+    Route::get('/logout', [MeController::class, 'logout']);
 });
 
 

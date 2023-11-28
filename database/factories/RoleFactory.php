@@ -1,12 +1,26 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+namespace Database\Factories;
 
-use Faker\Generator as Faker;
+use App\Models\Role;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(\App\Models\Role::class, function (Faker $faker) {
-    return [
-        'name' => 'Admin',
-        'guard_name' => 'api'
-    ];
-});
+/**
+ * @extends Factory<Role>
+ */
+class RoleFactory extends Factory
+{
+
+    /**
+     * Define the model's default state.
+     *
+     * @return array<string, mixed>
+     */
+    public function definition(): array
+    {
+        return [
+            'name' => 'Admin',
+            'guard_name' => 'api'
+        ];
+    }
+}

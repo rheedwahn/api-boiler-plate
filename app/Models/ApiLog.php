@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
-use App\Traits\UuidTrait;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ApiLog extends BaseModel
 {
-    public function user()
+    /**
+     * @return BelongsTo
+     */
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }

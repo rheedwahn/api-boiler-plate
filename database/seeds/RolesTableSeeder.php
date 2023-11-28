@@ -1,5 +1,7 @@
 <?php
+namespace Database\Seeders;
 
+use App\Models\Role;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -10,18 +12,12 @@ class RolesTableSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
         //delete previous records
         DB::table('roles')->delete();
 
         //create a new role
-        factory(\App\Models\Role::class)->create();
-        factory(\App\Models\Role::class)->create([
-            'name' => 'Doctor'
-        ]);
-        factory(\App\Models\Role::class)->create([
-            'name' => 'Patient'
-        ]);
+        Role::factory()->create();
     }
 }

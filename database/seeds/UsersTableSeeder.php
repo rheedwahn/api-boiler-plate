@@ -1,4 +1,5 @@
 <?php
+namespace Database\Seeders;
 
 use App\Models\Profile;
 use App\Models\User;
@@ -12,46 +13,20 @@ class UsersTableSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
         //delete previous user records
         DB::table('users')->delete();
 
         //create a new admin user record
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         //create profile for the admin user
-        factory(Profile::class)->create([
-            'user_id' => $user->id
+        Profile::factory()->create([
+            'user_id' => $user->first()->id
         ]);
 
         //assign user with the role admin
-        $user->assignRole('Admin');
-
-        //create a new doctor user record
-        $doctor = factory(User::class)->create([
-            'email' => 'doctor@doctor.com'
-        ]);
-
-        //create profile for the doctor
-        factory(Profile::class)->create([
-            'user_id' => $doctor->id
-        ]);
-
-        //assign user with the role doctor
-        $doctor->assignRole('Doctor');
-
-        //create a new patient user record
-        $patient = factory(User::class)->create([
-            'email' => 'patient@patient.com'
-        ]);
-
-        //create profile for the patient
-        factory(Profile::class)->create([
-            'user_id' => $patient->id
-        ]);
-
-        //assign user with the role patient
-        $patient->assignRole('Patient');
+        $user->first()->assignRole('Admin');
     }
 }
