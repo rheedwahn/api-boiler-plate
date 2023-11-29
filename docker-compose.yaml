@@ -39,8 +39,8 @@ services:
     environment:
       MYSQL_DATABASE: api
       DB_USERNAME: api
-      DB_PASSWORD: apiUser1.
-      MYSQL_ROOT_PASSWORD: apiUser1.
+      DB_PASSWORD: api_user
+      MYSQL_ROOT_PASSWORD: api_user
     volumes:
       - dbdata:/var/lib/mysql/
     networks:

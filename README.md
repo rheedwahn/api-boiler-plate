@@ -1,6 +1,6 @@
 ## About Rapido Api Boiler Plate
 
-This is a complete api boiler plate that allows you to easily set up and get your development work going without any hassle. The boiler plate is built on Laravel, one of PHP's most popular framework. It is developed by [rheedwahn](https://rheedwahn.github.io/). The boiler plate has the following implementation out of the box
+This is a complete api boilerplate that allows you to easily set up and get your development work going without any hassle. The boilerplate is built on Laravel, one of PHP's most popular framework. It is developed by [rheedwahn](https://rheedwahn.github.io/). The boilerplate has the following implementation out of the box
 
 - User Authentication using laravel passport for token management
 - User Registration
@@ -11,7 +11,7 @@ This is a complete api boiler plate that allows you to easily set up and get you
 
 ## Api Endpoints
 
-To download the postman collection, please click on this [link](https://www.getpostman.com/collections/eb18b48ebbd906a5a900). The endpoints has the following folder structure
+To download the postman collection, please click on this [link](https://www.getpostman.com/collections/eb18b48ebbd906a5a900). The base URL is prefixed with *v1* and the endpoints has the following folder structure
 
 - Auth
   - Login Request
@@ -32,7 +32,7 @@ To download the postman collection, please click on this [link](https://www.getp
   - Store Request
   - Update Request
   - Delete Request
-  - Assing Permissions to Role Request
+  - Assign Permissions to Role Request
 - Permissions
   - List Request
   - Store request
@@ -41,7 +41,7 @@ To download the postman collection, please click on this [link](https://www.getp
 
 ## Setup of Dev Environment
 
-The environment is setup using docker, so you can just get started immediately without jumping through hoops to setup environments.
+The environment is set up using docker, so you can just get started immediately without jumping through hoops to set up environments.
 
 The tools you need installed in your environment are the latest version of `docker` and `docker-compose`
 
@@ -60,7 +60,7 @@ Alternatively, you do not have to go into any of the containers to do this, you 
     * `docker-compose exec api_boiler_plate composer install`
 
 4. the webserver and mysql database can be accessed at the following endpoints and ports:
-    * webserver: __localhost:8090__
+    * api: __localhost:8090__
     * database:
         * location: __localhost:3306__
         * username: __root__
@@ -73,9 +73,9 @@ As you make changes, the changes are reflected, while testing.
 If you want to go into a running container, whether te webserver or the database, the following commands using docker-compose will help.
 
 ```bash
-docker-compose exec api_boiler_plate bash # this is for the api app
-docker-compose exec database_engine bash # this is for the database
-docker-compose exec redis_server bash # this is for the redis server
+docker-compose exec api bash # this is for the api app
+docker-compose exec database bash # this is for the database
+docker-compose exec redis bash # this is for the redis server
 ```
 
 There are many reasons you might want to go into the containers, i.e run some commands, check logs etc
@@ -93,7 +93,7 @@ For first time installation, after successful start of the containers, you ll ne
 
 ## Contributing
 
-For anyone willing to contribute to this boiler plate, please dont hesitate to open a PR with your contributions
+For anyone willing to contribute to this boilerplate, please dont hesitate to open a PR with your contributions
 
 ## Security Vulnerabilities
 
@@ -101,4 +101,4 @@ If you discover a security vulnerability within this boiler plate, please open a
 
 ## License
 
-Rapido Api boiler plate is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Rapido Api boilerplate is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
